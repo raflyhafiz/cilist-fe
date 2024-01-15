@@ -8,11 +8,17 @@ pipeline {
         steps {
             script{
                 if (env.BRANCH_NAME == 'staging') {
+                    slackSend channel: '#jenkinsnotif',
+                      color: 'good',
+                      message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}"
                     dir('frontend'){
                         sh 'docker build -t raflyhafiz/cilist-fe:0.0.$BUILD_NUMBER-staging .'
                     }
                 }
                 else if (env.BRANCH_NAME == 'master') {
+                    slackSend channel: '#jenkinsnotif',
+                      color: 'good',
+                      message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}"
                     dir('frontend'){
                          sh 'docker build -t raflyhafiz/cilist-fe:0.0.$BUILD_NUMBER-master .' 
                     }
@@ -27,9 +33,15 @@ pipeline {
         steps {
             script {
              if (env.BRANCH_NAME == 'staging') {
+                slackSend channel: '#jenkinsnotif',
+                      color: 'good',
+                      message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}"
             sh 'docker push raflyhafiz/cilist-fe:0.0.$BUILD_NUMBER-staging'
                 }
                 else if (env.BRANCH_NAME == 'master') {
+                 slackSend channel: '#jenkinsnotif',
+                      color: 'good',
+                      message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}"
             sh 'docker push raflyhafiz/cilist-fe:0.0.$BUILD_NUMBER-master' 
                 }
                 else {
@@ -42,11 +54,17 @@ pipeline {
         steps {
             script {
                 if (env.BRANCH_NAME == 'staging') {
+                    slackSend channel: '#jenkinsnotif',
+                      color: 'good',
+                      message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}"
                     kubeconfig(credentialsId: 'configk8', serverUrl: '') {
                         sh 'cat frontend-stag/fe-stag.yaml | sed "s/{{NEW_TAG}}/0.0.$BUILD_NUMBER-staging/g" | kubectl apply -f -'
                     }
                 }
                 else if (env.BRANCH_NAME == 'master') {
+                    slackSend channel: '#jenkinsnotif',
+                      color: 'good',
+                      message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}"
                     kubeconfig(credentialsId: 'configk8', serverUrl: '') {
                         sh 'cat frontend-prod/fe-prod.yaml | sed "s/{{NEW_TAG}}/0.0.$BUILD_NUMBER-master/g" | kubectl apply -f -'
                     }
