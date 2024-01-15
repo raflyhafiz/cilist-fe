@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: fe-cilist-stag
-        image: raflyhafiz/latihanfe:test	
+        image: raflyhafiz/cilist-fe:{{NEW_TAG}}	
         ports:
         - containerPort: 3000   
 ---
