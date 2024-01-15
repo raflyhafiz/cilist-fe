@@ -20,7 +20,13 @@ spec:
       - name: fe-cilist-stag
         image: raflyhafiz/cilist-fe:{{NEW_TAG}}	
         ports:
-        - containerPort: 3000   
+        - containerPort: 3000
+        env:
+        - name: REACT_APP_BACKEND_URL
+          valueFrom:
+            configMapKeyRef:
+              name: fe-configmap-stag
+              key: REACT_APP_BACKEND_URL    
 ---
 apiVersion: v1
 kind: Service
