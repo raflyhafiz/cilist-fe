@@ -9,12 +9,12 @@ pipeline {
             script{
                 if (env.BRANCH_NAME == 'staging') {
                     dir('frontend'){
-                        sh 'docker build -t rafly21/fe-cilistproject:0.0.$BUILD_NUMBER-staging .'
+                        sh 'docker build -t raflyhafiz/cilist-fe:0.0.$BUILD_NUMBER-staging .'
                     }
                 }
                 else if (env.BRANCH_NAME == 'master') {
                     dir('frontend'){
-                         sh 'docker build -t rafly21/fe-cilistproject:0.0.$BUILD_NUMBER-master .' 
+                         sh 'docker build -t raflyhafiz/cilist-fe:0.0.$BUILD_NUMBER-master .' 
                     }
                 }
                 else {
@@ -27,16 +27,35 @@ pipeline {
         steps {
             script {
              if (env.BRANCH_NAME == 'staging') {
-            sh 'docker push rafly21/fe-cilistproject:0.0.$BUILD_NUMBER-staging'
+            sh 'docker push raflyhafiz/cilist-fe:0.0.$BUILD_NUMBER-staging'
                 }
                 else if (env.BRANCH_NAME == 'master') {
-            sh 'docker push rafly21/fe-cilistproject:0.0.$BUILD_NUMBER-master' 
+            sh 'docker push raflyhafiz/cilist-fe:0.0.$BUILD_NUMBER-master' 
                 }
                 else {
                     sh 'echo Nothing to Push'
                 }
         }
       }
+    } 
+    stage('Deploy to Kubernetes') {
+        steps {
+            script {
+                if (env.BRANCH_NAME == 'staging') {
+                    kubeconfig(credentialsId: 'configk8', serverUrl: '') {
+                        sh 'cat frontend-stag/fe-stag.yaml | sed "s/{{NEW_TAG}}/0.0.$BUILD_NUMBER-staging/g" | kubectl apply -f -'
+                    }
+                }
+                else if (env.BRANCH_NAME == 'master') {
+                    kubeconfig(credentialsId: 'configk8', serverUrl: '') {
+                        sh 'cat frontend-prod/fe-prod.yaml | sed "s/{{NEW_TAG}}/0.0.$BUILD_NUMBER-master/g" | kubectl apply -f -'
+                    }
+                }
+                else {
+                    echo "Tidak ada yg dideploy"
+                }
+            }
+        }
     } 
 }
     //  post {

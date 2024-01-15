@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fe-cilist-stag
+  namespace: staging
+  labels:
+    app: fe-cilist-stag
+    name: fe-cilist-stag
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: fe-cilist-stag
+  template:
+    metadata:
+      labels:
+        app: fe-cilist-stag
+    spec:
+      containers:
+      - name: fe-cilist-stag
+        image: raflyhafiz/latihanfe:test	
+        ports:
+        - containerPort: 3000   
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-fe-cilist-stag
+  namespace: staging
+spec:
+  selector:
+    app: fe-cilist-stag
+  ports:
+  - port: 3000
+    targetPort: 3000
+    protocol: TCP
+  type: NodePort
+    

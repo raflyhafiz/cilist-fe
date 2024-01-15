@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fe-configmap-stag
+  namespace: staging
+  labels:
+    app: fe-cilist-stag
+data:
+  REACT_APP_BACKEND_URL: https://api-staging.cilist.my.id
